@@ -1,24 +1,27 @@
-name: 'Purge artifacts'
-description: 'Automatically delete artifacts'
+name: 'Artifact TTL Purge'
+description: 'Delete GitHub Actions artifacts older than a human-readable expiry duration (e.g. "10 minutes", "1 week").'
+author: 'Pavel Kolář (original author), Evan Smith (contributor)'
 branding:
   icon: 'trash-2'
   color: 'red'
-author: 'Pavel Kolář'
 inputs:
   expire-in:
     required: true
-    description: 'Human readable expire duration'
+    description: 'Human-readable max age; artifacts older than this are deleted (e.g. "30 minutes", "1hr 20mins", "1 week").'
   token:
     required: true
-    description: 'Github auth token'
+    description: 'GitHub token with actions:write permission, used to list and delete artifacts.'
   onlyPrefix:
     required: false
-    description: 'Only artifacts with the specified prefix will be deleted'
+    description: 'If set, only artifacts whose name starts with this prefix are eligible for deletion.'
     default: ''
   exceptPrefix:
     required: false
-    description: 'Artifacts with this prefix will not be included for deletion'
+    description: 'Artifacts whose name starts with this prefix are never deleted.'
     default: ''
+outputs:
+  deleted-artifacts:
+    description: 'Serialized JSON array of the deleted artifacts; "[]" when nothing was deleted.'
 runs:
   using: 'node24'
   main: 'dist/index.js'
