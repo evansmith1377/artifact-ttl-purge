@@ -29,6 +29,9 @@ jobs:
       - run: npm run all
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
       - uses: actions/checkout@v6
       - uses: ./
