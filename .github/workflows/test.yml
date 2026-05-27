@@ -3,8 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
-      - 'releases/*'
+      - main
 
 jobs:
   artifact:
@@ -14,21 +13,24 @@ jobs:
         run: |
           echo $(date) > date.txt
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: artifact
           path: date.txt
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - run: |
-          yarn
-          yarn run all
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run all
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
