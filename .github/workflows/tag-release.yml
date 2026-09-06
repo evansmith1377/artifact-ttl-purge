@@ -56,5 +56,5 @@ jobs:
         run: |
           # A tag pushed with the default GITHUB_TOKEN doesn't trigger other
           # workflows (to avoid recursive runs), so dispatch release.yml
-          # explicitly onto the new tag.
-          gh workflow run release.yml --ref "${{ steps.version.outputs.tag }}"
+          # explicitly, telling it which tag to release.
+          gh workflow run release.yml --ref "${{ github.ref_name }}" -f tag="${{ steps.version.outputs.tag }}"
