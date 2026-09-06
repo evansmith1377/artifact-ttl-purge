@@ -1,0 +1,50 @@
+name: 'tag release'
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to tag, e.g. 1.1.2 or v1.1.2 (defaults to the version in package.json)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Determine version
+        id: version
+        run: |
+          VERSION="${{ inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION="$(node -p "require('./package.json').version")"
+          fi
+          VERSION="${VERSION#v}"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check package.json version matches tag
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$PKG_VERSION" != "${{ steps.version.outputs.tag }}" ]; then
+            echo "::error::package.json is at $PKG_VERSION, which doesn't match the requested tag ${{ steps.version.outputs.tag }}. Bump and merge the version first."
+            exit 1
+          fi
+
+      - name: Check tag doesn't already exist
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/${{ steps.version.outputs.tag }}" >/dev/null; then
+            echo "::error::Tag ${{ steps.version.outputs.tag }} already exists."
+            exit 1
+          fi
+
+      - name: Create and push tag
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git tag "${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
