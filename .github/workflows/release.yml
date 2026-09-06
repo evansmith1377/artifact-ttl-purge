@@ -13,9 +13,6 @@ on:
 
 permissions:
   contents: write
-  # Needed to force-move the major tag across commits that touch
-  # .github/workflows/*, which GitHub otherwise refuses.
-  workflows: write
 
 jobs:
   release:
