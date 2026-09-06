@@ -21,12 +21,12 @@ permissions:
 
 ## Inputs
 
-| Input          | Required | Default              | Description                                                                                   |
-| -------------- | -------- | -------------------- | --------------------------------------------------------------------------------------------- |
-| `expire-in`    | yes      | —                    | Max artifact age; anything older is deleted. Human-readable, e.g. `30 minutes`, `1 week`. `0` deletes everything. |
-| `token`        | no       | `${{ github.token }}` | Token used to list and delete artifacts. Must carry `actions: write` (see Permissions above). |
-| `onlyPrefix`   | no       | `''`                 | If set, only artifacts whose name starts with this prefix are eligible for deletion.          |
-| `exceptPrefix` | no       | `''`                 | Artifacts whose name starts with this prefix are never deleted (takes precedence over `onlyPrefix`). |
+| Input          | Required | Default               | Description                                                                                                       |
+| -------------- | -------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `expire-in`    | yes      | —                     | Max artifact age; anything older is deleted. Human-readable, e.g. `30 minutes`, `1 week`. `0` deletes everything. |
+| `token`        | no       | `${{ github.token }}` | Token used to list and delete artifacts. Must carry `actions: write` (see Permissions above).                     |
+| `onlyPrefix`   | no       | `''`                  | If set, only artifacts whose name starts with this prefix are eligible for deletion.                              |
+| `exceptPrefix` | no       | `''`                  | Artifacts whose name starts with this prefix are never deleted (takes precedence over `onlyPrefix`).              |
 
 Durations are parsed by
 [`parse-duration`](https://github.com/jkroso/parse-duration); see it for the
@@ -34,9 +34,9 @@ full list of supported formats (`10 minutes`, `1hr 20mins`, `1week`, ...).
 
 ## Outputs
 
-| Output              | Description                                                                       |
-| ------------------- | --------------------------------------------------------------------------------- |
-| `deleted-artifacts` | Serialized JSON array of the deleted artifacts; `"[]"` when nothing was deleted.  |
+| Output              | Description                                                                      |
+| ------------------- | -------------------------------------------------------------------------------- |
+| `deleted-artifacts` | Serialized JSON array of the deleted artifacts; `"[]"` when nothing was deleted. |
 
 ## Usage
 
@@ -116,13 +116,19 @@ release is a manual, two-step process:
 
 1. **Bump the version** in `package.json` (and `package-lock.json`, via
    `npm ci`/`npm install`), commit it (e.g. `Bump version 1.1.1 -> 1.1.2`),
-   and push to `main`.
-2. **Tag and push the tag**:
+   and merge it to `main`.
+2. **Tag `main`**, either:
+   - locally:
 
-   ```bash
-   git tag vX.Y.Z
-   git push origin vX.Y.Z
-   ```
+     ```bash
+     git tag vX.Y.Z
+     git push origin vX.Y.Z
+     ```
+
+   - or by running the [tag release workflow](./.github/workflows/tag-release.yml)
+     from the Actions tab (`workflow_dispatch`), which tags `main` at its
+     current `package.json` version and pushes the tag for you - useful if
+     your local credentials aren't allowed to push tags directly.
 
 Pushing the tag triggers the release workflow, which:
 
