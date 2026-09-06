@@ -108,6 +108,31 @@ npm run all   # typecheck, format-check, lint, bundle (dist/), test
 `npm run pack` and commit the result whenever `src/` changes (the release
 workflow enforces this).
 
+## Releasing
+
+The [release workflow](./.github/workflows/release.yml) only runs when a
+`vX.Y.Z` tag is pushed - it does **not** bump the version itself. Cutting a
+release is a manual, two-step process:
+
+1. **Bump the version** in `package.json` (and `package-lock.json`, via
+   `npm ci`/`npm install`), commit it (e.g. `Bump version 1.1.1 -> 1.1.2`),
+   and push to `main`.
+2. **Tag and push the tag**:
+
+   ```bash
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+
+Pushing the tag triggers the release workflow, which:
+
+- Runs `npm run all` (typecheck, format-check, lint, bundle, test).
+- Fails if `dist/` doesn't match what's committed, so bump the version and
+  rebuild `dist/` (`npm run pack`) in the same commit.
+- Creates a GitHub release for the tag with auto-generated notes.
+- Force-moves the major version tag (e.g. `v1`) to point at the new tag, so
+  consumers pinned to `uses: .../artifact-ttl-purge@v1` pick up the change.
+
 ## License
 
 MIT. See [LICENSE](./LICENSE).
