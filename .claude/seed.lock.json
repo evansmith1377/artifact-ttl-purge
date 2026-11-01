@@ -1,0 +1,63 @@
+{
+  "source": "evansmith1377/claude-seed",
+  "commit": "77860563a8161cc6163eac5a07046c5c4eb8a741",
+  "seededAt": "2026-10-30",
+  "capabilities": {
+    "permissions-baseline": {
+      "members": null,
+      "variant": [
+        "node",
+        "powershell-tool"
+      ],
+      "placeholders": {},
+      "adaptations": [
+        "allow npm run all, build, lint, format-check and pack by exact name",
+        "settings.json formatted with Prettier, which format-check covers; .claude/seed.lock.json added to .prettierignore"
+      ],
+      "files": {
+        ".claude/settings.json#permissions": "sha256:a1d14b1c65cc26fafae7d4d6ecc5e1167c7ded75667bd46f68756b4c84e19cfc",
+        ".claude/README.md": "sha256:ae6ccc1abb7e9c8181e787f781bbdb17e473d0bd4903cff3c8e42a1513d3216f"
+      }
+    },
+    "guard-secrets": {
+      "members": null,
+      "variant": null,
+      "placeholders": {},
+      "adaptations": [],
+      "files": {
+        ".claude/hooks/guard-secrets.sh": "sha256:9a525b5bc2ddeb823b9255ebd26a62cf997ef5900da00ae026407e75fa004233",
+        ".claude/settings.json#hooks.PreToolUse:.claude/hooks/guard-secrets.sh": "sha256:6d6d4160cccdba5f9e93be0c865ce34f44b212d7c32e39f1d8c4a353d6c12516",
+        ".claude/README.md": "sha256:6e6d030ad9408f7ed5a7a63cffb17bc827c5103a0456d03f86da52e5fa5f191a"
+      }
+    },
+    "claude-md-house-style": {
+      "members": null,
+      "variant": null,
+      "placeholders": {
+        "CHECK_COMMAND": "npm run all"
+      },
+      "adaptations": [
+        "CLAUDE.md written from the survey above the section (commands, layout, committed dist/, SHA-pinned consumers, delete semantics)"
+      ],
+      "files": {
+        "CLAUDE.md": "sha256:026b9eeff50abec86fc37fcc9e6ceb2eb636a270a39fd01b59129460d69ec65f"
+      }
+    },
+    "github-hygiene": {
+      "members": [
+        "workflow-conventions"
+      ],
+      "variant": null,
+      "placeholders": {},
+      "adaptations": [
+        "workflow-conventions: runner-pinning bullet dropped (dist/ is built and committed locally, CI only verifies it) and the ruleset bullet dropped (ruleset not installed)"
+      ],
+      "files": {
+        "CLAUDE.md": "sha256:4dd4bd46f5a3385f5118cbc9d15704bd8ba9a585a2bef49d71538fd7f25e9df2"
+      }
+    }
+  },
+  "skipped": {
+    "github-hygiene/dependabot": "existing equivalent: .github/dependabot.yml covers npm and actions weekly"
+  }
+}
